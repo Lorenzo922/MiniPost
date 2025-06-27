@@ -3,21 +3,22 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MiniPost</title>
+  <title>MiniPost Anônimo</title>
   <link rel="stylesheet" href="style.css" />
   <!-- Firebase SDKs -->
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
   <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-analytics-compat.js"></script>
 </head>
 <body>
   <header>
-    <h1>MiniPost</h1>
-    <div id="user-info">
-      <button id="login-btn">Entrar com Google</button>
-      <button id="logout-btn" style="display: none;">Sair</button>
+    <h1>MiniPost Anônimo</h1>
+    <div id="login-area">
+      <input type="text" id="name-input" placeholder="Digite seu nome" />
+      <button id="login-btn">Entrar</button>
+    </div>
+    <div id="user-info" style="display: none;">
       <span id="user-name"></span>
+      <button id="logout-btn">Sair</button>
     </div>
   </header>
 
