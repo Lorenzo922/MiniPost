@@ -9,53 +9,49 @@ const firebaseConfig = {
 };
 
 firebase.initializeApp(firebaseConfig);
-firebase.analytics();
-
-const auth = firebase.auth();
 const db = firebase.firestore();
 
+let currentUserName = null;
+
+const nameInput = document.getElementById('name-input');
 const loginBtn = document.getElementById('login-btn');
 const logoutBtn = document.getElementById('logout-btn');
+const userInfo = document.getElementById('user-info');
 const userNameSpan = document.getElementById('user-name');
+const loginArea = document.getElementById('login-area');
 const postForm = document.getElementById('post-form');
 const postText = document.getElementById('post-text');
 const postBtn = document.getElementById('post-btn');
 const postsDiv = document.getElementById('posts');
 
 loginBtn.onclick = () => {
-  const provider = new firebase.auth.GoogleAuthProvider();
-  auth.signInWithPopup(provider);
+  const name = nameInput.value.trim();
+  if (name.length < 2) {
+    alert("Digite um nome válido!");
+    return;
+  }
+  currentUserName = name;
+  userNameSpan.textContent = `Olá, ${currentUserName}`;
+  loginArea.style.display = 'none';
+  userInfo.style.display = 'flex';
+  postForm.style.display = 'block';
+  carregarPosts();
 };
 
 logoutBtn.onclick = () => {
-  auth.signOut();
+  currentUserName = null;
+  userInfo.style.display = 'none';
+  loginArea.style.display = 'flex';
+  postForm.style.display = 'none';
+  postsDiv.innerHTML = '';
 };
-
-auth.onAuthStateChanged(user => {
-  if (user) {
-    loginBtn.style.display = 'none';
-    logoutBtn.style.display = 'inline-block';
-    userNameSpan.textContent = `Olá, ${user.displayName}`;
-    postForm.style.display = 'block';
-    carregarPosts();
-  } else {
-    loginBtn.style.display = 'inline-block';
-    logoutBtn.style.display = 'none';
-    userNameSpan.textContent = '';
-    postForm.style.display = 'none';
-    postsDiv.innerHTML = '';
-  }
-});
 
 postBtn.onclick = async () => {
   const texto = postText.value.trim();
-  if (texto.length === 0) return alert("Digite algo para postar!");
-
-  const user = auth.currentUser;
-  if (!user) return alert("Você precisa estar logado!");
+  if (!texto || !currentUserName) return;
 
   await db.collection('posts').add({
-    authorName: user.displayName,
+    authorName: currentUserName,
     text: texto,
     createdAt: firebase.firestore.FieldValue.serverTimestamp()
   });
